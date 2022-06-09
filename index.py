@@ -1,5 +1,6 @@
 #Se importa la librería Flask
 from flask import Flask, request, jsonify
+# from flask_cors import cross_origin
 from flask_cors import CORS
 
 diccionario_usuarios = {
@@ -21,27 +22,40 @@ diccionario_productos = {
     "0": {
         "id": "0",
         "codigo": "p-001",
-        "nombre": "producto1",
+        "nombre": "Producto-1",
         "categoria": "electronico",
-        "precio": 1.00,
+        "precio": 1.50,
         "cantidad": 1,
+        "imagen": "https://www.bosch-professional.com/ec/es/ocsmedia/74880-54/application-image/1434x828/taladro-de-percusion-a-bateria-gsb-18-v-li-06018671e1.png",
         "descripcion": "Primer producto electronico de prueba..."
     },
     "1": {
         "id": "1",
         "codigo": "p-001",
-        "nombre": "producto2",
+        "nombre": "Producto-2",
         "categoria": "electronico",
         "precio": 2.00,
+        "imagen": "https://www.bosch-professional.com/ec/es/ocsmedia/74880-54/application-image/1434x828/taladro-de-percusion-a-bateria-gsb-18-v-li-06018671e1.png",
         "cantidad": 10,
         "descripcion": "Segundo producto electronico de prueba..."
     },
     "2": {
         "id": "2",
         "codigo": "p-002",
-        "nombre": "producto3",
+        "nombre": "Producto-3",
         "categoria": "electronico",
         "precio": 3.00,
+        "imagen": "https://www.bosch-professional.com/ec/es/ocsmedia/74880-54/application-image/1434x828/taladro-de-percusion-a-bateria-gsb-18-v-li-06018671e1.png",
+        "cantidad": 15,
+        "descripcion": "Tercer producto electronico de prueba..."
+    },
+    "3": {
+        "id": "3",
+        "codigo": "p-003",
+        "nombre": "Producto-4",
+        "categoria": "electronico",
+        "precio": 3.00,
+        "imagen": "https://www.bosch-professional.com/ec/es/ocsmedia/74880-54/application-image/1434x828/taladro-de-percusion-a-bateria-gsb-18-v-li-06018671e1.png",
         "cantidad": 15,
         "descripcion": "Tercer producto electronico de prueba..."
     }
@@ -50,7 +64,14 @@ diccionario_proveedores = {
     "0": {
         "id": "0",
         "ruc": "1234567899001",
-        "nombre": "proveedor1",
+        "nombre": "Proveedor-1",
+        "telefono": "1234567",
+        "correo_electronico": "proveedor1@mail.com",
+    },
+    "1": {
+        "id": "1",
+        "ruc": "2234567899001",
+        "nombre": "Proveedor-2",
         "telefono": "1234567",
         "correo_electronico": "proveedor1@mail.com",
     }
@@ -60,7 +81,12 @@ diccionario_categoría = {
     "0": {
         "id": "0",
         "codigo": "c-001",
-        "nombre": "tecnologia",
+        "nombre": "Maquinaria pesada",
+    },
+    "1": {
+        "id": "1",
+        "codigo": "c-002",
+        "nombre": "Hogar",
     }
 }
 diccionario_clientes = {}
@@ -69,7 +95,11 @@ diccionario_clientes = {}
 app = Flask(__name__)
 
 # Settings
-CORS(app)
+# CORS(app)
+# cors = CORS(app , resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+# cors = CORS(app , resources={r"/*": {"origins": "http://localhost:3000" }})
+cors = CORS(app , resources={r"/*": {"origins": "*" }})
+
 
 #Decorador ruta raíz
 @app.route('/')
@@ -89,13 +119,22 @@ def obtenerUsuarios(id):
 
 @app.route('/login', methods=['POST'])
 def loginUsuario():
-    if (diccionario_usuarios[request.json['userName']]):
+    usuario = diccionario_usuarios.get(request.json['nombreUsuario'])
+    if (usuario is None):
         return {
-            "registrado": "true"
+            "login": False,
+            "datosUsuario": None
+        }
+
+    if (usuario['password'] == request.json['password']):
+        return {
+            "login": True,
+            "datosUsuario": usuario
         }
     else:
         return {
-            "registrado": "false"
+            "login": False,
+            "datosUsuario": None
         }
     
 
@@ -135,7 +174,8 @@ def actualiarProductos(id):
 # ------------- Proveedores
 @app.route('/proveedores', methods=['GET'])
 def obtenerProveedores():
-    return diccionario_proveedores
+    listaProveedores = list(diccionario_proveedores.values())
+    return jsonify(listaProveedores)
 
 @app.route('/proveedor/<id>', methods=['GET'])
 def obtenerProveedor(id):
@@ -159,7 +199,8 @@ def actualiarProveedores(id):
 # ------------- Categorias
 @app.route('/categorias', methods=['GET'])
 def obtenerCategorias():
-    return diccionario_categoría
+    listaCategorias = list(diccionario_categoría.values())
+    return jsonify(listaCategorias)
 
 @app.route('/categoria/<id>', methods=['GET'])
 def obtenerCategoria(id):

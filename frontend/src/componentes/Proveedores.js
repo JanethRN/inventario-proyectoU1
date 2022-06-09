@@ -1,4 +1,5 @@
 // import { Table } from "react-bootstrap";
+import { BarraNavegacion } from "./BarraNavegacion";
 
 const JsonData = [
     {
@@ -10,10 +11,10 @@ const JsonData = [
     }
 ]
 
-export const Proveedores = () => {
-    const DisplayData=JsonData.map(
-        (info)=>{
-            return(
+export const ListaProveedoresOls =  () => {
+    const DisplayData = JsonData.map(
+        (info) => {
+            return (
                 <tr>
                     <td>{info.id}</td>
                     <td>{info.ruc}</td>
@@ -24,24 +25,26 @@ export const Proveedores = () => {
             )
         }
     );
- 
-    return(
-        <div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                    <th>Id</th>
-                    <th>RUC</th>
-                    <th>Nombre</th>
-                    <th>Telefono</th>
-                    <th>Correo electronico</th>
-                    </tr>
-                </thead>
-                <tbody>                    
-                    {DisplayData}
-                </tbody>
-            </table>
-             
-        </div>
+
+    return (
+        <>
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>RUC</th>
+                            <th>Nombre</th>
+                            <th>Telefono</th>
+                            <th>Correo electronico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {DisplayData}
+                    </tbody>
+                </table>
+
+            </div>
+        </>
     );
 }
