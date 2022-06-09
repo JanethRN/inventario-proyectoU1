@@ -19,73 +19,84 @@ diccionario_usuarios = {
 }
 
 diccionario_productos = {
-    "0": {
+    "PROD-0": {
         "id": "0",
-        "codigo": "p-001",
+        "codigo": "PROD-0",
         "nombre": "Producto-1",
-        "categoria": "electronico",
+        "categoria": "Hogar",
+        "proveedor": "Proveedor-1",
         "precio": 1.50,
-        "cantidad": 1,
+        "cantidad": 0,
         "imagen": "https://www.bosch-professional.com/ec/es/ocsmedia/74880-54/application-image/1434x828/taladro-de-percusion-a-bateria-gsb-18-v-li-06018671e1.png",
         "descripcion": "Primer producto electronico de prueba..."
     },
-    "1": {
+    "PROD-1": {
         "id": "1",
-        "codigo": "p-001",
+        "codigo": "PROD-1",
         "nombre": "Producto-2",
-        "categoria": "electronico",
+        "categoria": "Hogar",
+        "proveedor": "Proveedor-1",
         "precio": 2.00,
         "imagen": "https://www.bosch-professional.com/ec/es/ocsmedia/74880-54/application-image/1434x828/taladro-de-percusion-a-bateria-gsb-18-v-li-06018671e1.png",
         "cantidad": 10,
         "descripcion": "Segundo producto electronico de prueba..."
     },
-    "2": {
+    "PROD-2": {
         "id": "2",
-        "codigo": "p-002",
+        "codigo": "PROD-2",
         "nombre": "Producto-3",
-        "categoria": "electronico",
+        "categoria": "Maquinaria pesada",
+        "proveedor": "Proveedor-1",
         "precio": 3.00,
         "imagen": "https://www.bosch-professional.com/ec/es/ocsmedia/74880-54/application-image/1434x828/taladro-de-percusion-a-bateria-gsb-18-v-li-06018671e1.png",
         "cantidad": 15,
         "descripcion": "Tercer producto electronico de prueba..."
     },
-    "3": {
+    "PROD-3": {
         "id": "3",
-        "codigo": "p-003",
+        "codigo": "PROD-3",
         "nombre": "Producto-4",
-        "categoria": "electronico",
+        "categoria": "Hogar",
+        "proveedor": "Proveedor-1",
         "precio": 3.00,
         "imagen": "https://www.bosch-professional.com/ec/es/ocsmedia/74880-54/application-image/1434x828/taladro-de-percusion-a-bateria-gsb-18-v-li-06018671e1.png",
         "cantidad": 15,
         "descripcion": "Tercer producto electronico de prueba..."
     }
 }
+
 diccionario_proveedores = {
-    "0": {
+    "1234567899001": {
         "id": "0",
         "ruc": "1234567899001",
         "nombre": "Proveedor-1",
+        "direccion": "Direcion 1 s5 s5",
+        "provincia": "Provincia-1",
+        "ciudad": "Ciudad-1",
         "telefono": "1234567",
         "correo_electronico": "proveedor1@mail.com",
     },
-    "1": {
+    "2234567899001": {
         "id": "1",
         "ruc": "2234567899001",
         "nombre": "Proveedor-2",
+        "direccion": "Direcion 1 s5 s5",
+        "provincia": "Provincia-1",
+        "ciudad": "Ciudad-1",
         "telefono": "1234567",
         "correo_electronico": "proveedor1@mail.com",
     }
 }
 
-diccionario_categoría = {
+diccionario_categoria = {
     "0": {
         "id": "0",
-        "codigo": "c-001",
+        "codigo": "CAT-001",
         "nombre": "Maquinaria pesada",
     },
     "1": {
         "id": "1",
-        "codigo": "c-002",
+        "codigo": "CAT-002",
         "nombre": "Hogar",
     }
 }
@@ -94,21 +105,19 @@ diccionario_clientes = {}
 #Variable de instancia app
 app = Flask(__name__)
 
-# Settings
-# CORS(app)
-# cors = CORS(app , resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
-# cors = CORS(app , resources={r"/*": {"origins": "http://localhost:3000" }})
-cors = CORS(app , resources={r"/*": {"origins": "*" }})
+# COnfiguraciones
+#Configuración de CORS para permitir las petición desde el frontend react
+cors = CORS(app , resources={r"/*": {"origins": "http://localhost:3000" }})
 
 
 #Decorador ruta raíz
 @app.route('/')
-#Función que retorna la página principal 
+#Función para acceder al backend
 def principal(): 
-    return '<h1>Hola mundo</h1>'
+    return '<h1>Backend Ferreteria ESPE</h1>'
 
-# producto, proveedor, cliente, stock de producto, categoría, informe y catálogo, 
 # ------------- Acceso
+#Ruta 
 @app.route('/usuario/<id>', methods=['GET'])
 def obtenerUsuarios(id):
     return {
@@ -136,40 +145,97 @@ def loginUsuario():
             "login": False,
             "datosUsuario": None
         }
-    
 
-@app.route('/registro', methods=['POST'])
-def registrarusuario():
-    diccionario_usuarios[request.json['id']] = request.json
-    return {
-        "registrado": "true"
-    }
+# ------------- Informe Productos
+@app.route('/informe-productos', methods=['GET'])
+def obtenerInformeProductos():
+    listaProductos = []
+    totalMonetarioProducto = 0
+    for clave in diccionario_productos:
+        totalMonetarioProducto = diccionario_productos.get(clave)['precio'] * diccionario_productos.get(clave)['cantidad']
+        listaProductos.append(
+            {
+                "id": diccionario_productos.get(clave)['id'],
+                "codigo": diccionario_productos.get(clave)['codigo'],
+                "nombre": diccionario_productos.get(clave)['nombre'],
+                "precio": diccionario_productos.get(clave)['precio'],
+                "cantidad": diccionario_productos.get(clave)['cantidad'],
+                "total": totalMonetarioProducto,
+            }
+            
+        )
+    return jsonify(listaProductos)
+
+# ------------- Informe Productos Sin Stock
+@app.route('/informe-sin-stock', methods=['GET'])
+def obtenerInformeProductosSinStok():
+    listaProductos = []
+    for clave in diccionario_productos:
+        if diccionario_productos.get(clave)['cantidad'] == 0:
+            listaProductos.append(
+                {
+                    "id": diccionario_productos.get(clave)['id'],
+                    "codigo": diccionario_productos.get(clave)['codigo'],
+                    "nombre": diccionario_productos.get(clave)['nombre'],
+                    "categoria": diccionario_productos.get(clave)['categoria'],
+                    "proveedor": diccionario_productos.get(clave)['proveedor'],
+                    "precio": diccionario_productos.get(clave)['precio'],
+                    "cantidad": diccionario_productos.get(clave)['cantidad'],
+                    "descripcion": diccionario_productos.get(clave)['descripcion']
+                }
+                
+            )
+    return jsonify(listaProductos)
+
 
 # ------------- Productos
 @app.route('/productos', methods=['GET'])
 def obtenerProductos():
-    # return diccionario_productos
     listaproductos = list(diccionario_productos.values())
     return jsonify(listaproductos)
 
-@app.route('/producto/<id>', methods=['GET'])
-def obtenerProducto(id):
-    return diccionario_productos.get(id)
+@app.route('/producto/<codigoProducto>', methods=['GET'])
+def obtenerProducto(codigoProducto):
+    busqueda = diccionario_productos.get(codigoProducto)
+    if busqueda is None:
+        return {
+            "encontrado": False,
+            "datosUsuario": None
+        }
+    else:
+        return {
+            "encontrado": True,
+            "datosProducto": busqueda
+        }
 
 @app.route('/productos', methods=['POST'])
 def agregarProductos():
-    diccionario_productos[request.json['id']] = request.json
-    return diccionario_productos
+    diccionario_productos[request.json['codigo']] = request.json
+    return {
+        'agregado': True
+    }
 
-@app.route('/productos/<id>', methods=['DELETE'])
-def eliminarProductos(id):
-    diccionario_productos.pop(id, None)
-    return diccionario_productos
+@app.route('/productos/<codigo>', methods=['DELETE'])
+def eliminarProductos(codigo):
+    print(codigo)
+    diccionario_productos.pop(''+codigo, None)
+    return  {
+            "eliminado": True
+        }
 
-@app.route('/productos/<id>', methods=['PUT'])
-def actualiarProductos(id):
-    diccionario_productos[id] = request.json
-    return diccionario_productos
+@app.route('/productos', methods=['PUT'])
+def actualiarProductos():
+    print( request.json)
+    print( request.json['codigo'])
+    diccionario_productos.update({request.json['codigo']:  request.json})
+    return {
+        'actualizado': True
+    }
+
+@app.route('/stock', methods=['PUT'])
+def actualiarStock():
+    diccionario_productos.update({request.json['codigo']:  request.json})
+    return diccionario_productos.get(request.json['codigo'])
 
 # ------------- Proveedores
 @app.route('/proveedores', methods=['GET'])
@@ -177,49 +243,53 @@ def obtenerProveedores():
     listaProveedores = list(diccionario_proveedores.values())
     return jsonify(listaProveedores)
 
-@app.route('/proveedor/<id>', methods=['GET'])
-def obtenerProveedor(id):
-    return diccionario_proveedores.get(id)
-
 @app.route('/proveedores', methods=['POST'])
 def agregarProveedores():
-    diccionario_proveedores[request.json['id']] = request.json
+    diccionario_proveedores[request.json['ruc']] = request.json
     return diccionario_proveedores
 
-@app.route('/proveedores/<id>', methods=['DELETE'])
-def eliminarProveedores(id):
-    diccionario_proveedores.pop(id, None)
+@app.route('/proveedores/<ruc>', methods=['DELETE'])
+def eliminarProveedores(ruc):
+    diccionario_proveedores.pop(ruc, None)
     return diccionario_proveedores
 
-@app.route('/proveedores/<id>', methods=['PUT'])
-def actualiarProveedores(id):
-    diccionario_proveedores[id] = request.json
-    return diccionario_proveedores
+@app.route('/proveedores', methods=['PUT'])
+def actualiarProveedores():
+    diccionario_proveedores.update({request.json['ruc']:  request.json})
+    return {
+        'actualizado': True
+    }
 
 # ------------- Categorias
 @app.route('/categorias', methods=['GET'])
 def obtenerCategorias():
-    listaCategorias = list(diccionario_categoría.values())
+    listaCategorias = list(diccionario_categoria.values())
     return jsonify(listaCategorias)
 
-@app.route('/categoria/<id>', methods=['GET'])
-def obtenerCategoria(id):
-    return diccionario_categoría.get(id)
+@app.route('/productos-por-categoria', methods=['GET'])
+def obtenerProductosPorCategoria():
+    listaProductosPorCategoria = []
+    for claveCategoria in diccionario_categoria:
+        productosCategoria = []
+        for claveProducto in diccionario_productos:
+            if diccionario_productos.get(claveProducto)['categoria'] == diccionario_categoria.get(claveCategoria)['nombre']:
+                productosCategoria.append(
+                    {
+                        "id": diccionario_productos.get(claveProducto)['id'],
+                        "codigo": diccionario_productos.get(claveProducto)['codigo'],
+                        "nombre": diccionario_productos.get(claveProducto)['nombre'],
+                        "categoria": diccionario_productos.get(claveProducto)['categoria'],
+                        "proveedor": diccionario_productos.get(claveProducto)['proveedor'],
+                        "precio": diccionario_productos.get(claveProducto)['precio'],
+                        "imagen": diccionario_productos.get(claveProducto)['imagen'],
+                        "descripcion": diccionario_productos.get(claveProducto)['descripcion']
+                    }
+                    
+                )
+        if len(productosCategoria) > 0:
+            listaProductosPorCategoria.append(productosCategoria)
 
-@app.route('/categorias', methods=['POST'])
-def agregarCategorias():
-    diccionario_categoría[request.json['id']] = request.json
-    return diccionario_categoría
-
-@app.route('/categorias/<id>', methods=['DELETE'])
-def eliminarCategorias(id):
-    diccionario_categoría.pop(id, None)
-    return diccionario_categoría
-
-@app.route('/categorias/<id>', methods=['PUT'])
-def actualiarCategorias(id):
-    diccionario_categoría[id] = request.json
-    return diccionario_categoría
+    return jsonify(listaProductosPorCategoria)
 
 
 #Main del programa

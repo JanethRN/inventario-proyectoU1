@@ -3,18 +3,17 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Login } from './componentes/Login';
 import { Inicio } from './componentes/Inicio';
 import { Contacto } from './componentes/Contacto';
-import { Catalogo } from './componentes/Catalogo';
 import { Productos } from './paginas/Productos';
 import { Proveedores } from './paginas/Proveedores';
 import { Clientes } from './paginas/Clientes';
 import { StockProducto } from './paginas/StockProducto';
 import { Categorias } from './paginas/Categorias';
 import { Informes } from './paginas/Informes';
+import { Catalogo } from './paginas/Catalogo';
 
 function App() {
   return (
     <Router forceRefresh={false}>
-      {/* <div className="container p-5"> */}
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/inicio' element={<Inicio />} />

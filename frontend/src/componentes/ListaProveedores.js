@@ -1,38 +1,49 @@
 import { Navigate } from 'react-router-dom';
-import { Form, Button, Row, Col, Tabs, Tab } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useState, useEffect } from 'react';
-import { BarraNavegacion } from "./BarraNavegacion";
 import { obtenerDatosUsuario } from '../funciones/usuario.funciones';
+import { ModalAlerta } from './ModalAlerta';
+import { ModalActualizarProveedor } from './ModalActualizarProveedor';
 
 export const ListaProveedores = () => {
     let [data, setData] = useState([]);
-    const [validated, setValidated] = useState(false);
+
+    const [alertaShow, setAlertaShow] = useState(false);
+    const [modalActualizar, setModalActualizar] = useState(false);
+    const [datosProveedorActual, setDatosProveedorActual] = useState({
+        ciudad: "",
+        correo_electronico: "",
+        direcion: "",
+        id: "",
+        nombre: "",
+        provincia: "",
+        ruc: "",
+        telefono: "",
+    });
 
     useEffect(
         () => {
-            obtenerProductos();
+            obtenerProveedores();
         }, []);
 
-    const obtenerProductos = async () => {
+    const obtenerProveedores = async () => {
         const res = await fetch('http://localhost:5000/proveedores');
         const resData = await res.json();
         setData(resData)
     };
 
-
-    const handleSubmit = (event) => {
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        setValidated(true);
-    };
-
-
     if (!obtenerDatosUsuario()) {
         return <Navigate to="/inicio" replace />;
+    }
+
+    const mostrarAlertaBorrar = (proveedor) => {
+        setDatosProveedorActual(proveedor);
+        setAlertaShow(true);
+    }
+
+    const mostrarActualizarProducto = (proveedor) => {
+        setDatosProveedorActual(proveedor);
+        setModalActualizar(true);
     }
 
     return (
@@ -42,37 +53,55 @@ export const ListaProveedores = () => {
                 <br />
                 <table className="table table-striped">
                     <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Código</th>
+                        <tr style={{ textAlign: 'center' }}>
+                            <th>RUC</th>
                             <th>Nombre</th>
-                            <th>Categoria</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>Descripcion</th>
+                            <th>Provincia</th>
+                            <th>Ciudad</th>
+                            <th>Dirección</th>
+                            <th>Telefono</th>
+                            <th>Correo electronico</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((producto) => (
-                            <tr key={producto.id}>
-                                <td>{producto.id}</td>
-                                <td>{producto.codigo}</td>
-                                <td>{producto.nombre}</td>
-                                <td>{producto.categoria}</td>
-                                <td>{producto.precio}</td>
-                                <td>{producto.cantidad}</td>
-                                <td>{producto.descripcion}</td>
+                        {data.map((proveedor) => (
+                            <tr style={{ textAlign: 'center' }} key={proveedor.ruc}>
+                                <td>{proveedor.ruc}</td>
+                                <td>{proveedor.nombre}</td>
+                                <td>{proveedor.provincia}</td>
+                                <td>{proveedor.ciudad}</td>
+                                <td>{proveedor.direcion}</td>
+                                <td>{proveedor.telefono}</td>
+                                <td>{proveedor.correo_electronico}</td>
                                 <td>
-                                    <Button variant="outline-success" type="submit">Actualizar</Button>
+                                    <Button variant="outline-success" type="button" onClick={() => mostrarActualizarProducto(proveedor)}>Actualizar</Button>
                                     <br />
                                     <br />
-                                    <Button variant="outline-danger" type="summir">Eliminar</Button>
+                                    <Button variant="outline-danger" type="button" onClick={() => mostrarAlertaBorrar(proveedor)}>Eliminar</Button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+                
+                <ModalActualizarProveedor
+                    id={'modal-actualizar-'+datosProveedorActual.ruc}
+                    show={modalActualizar}
+                    onHide={() => setModalActualizar(false)}
+                    onReLoad={() => obtenerProveedores()}
+                    datosProveedor={datosProveedorActual}
+                />
+
+                <ModalAlerta
+                    id={'alerta-'+datosProveedorActual.ruc}
+                    show={alertaShow}
+                    onHide={() => setAlertaShow(false)}
+                    tipo={'proveedor'}
+                    onReLoad={() => obtenerProveedores()}
+                    datosEliminar={datosProveedorActual}
+                />
+                
             </div >
         </>
     );

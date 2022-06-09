@@ -129,6 +129,29 @@ export const BarraNavegacion = () => {
         </Navbar>
     }
 
+    if (obtenerDatosUsuario().nombreUsuario !== '' && obtenerDatosUsuario().rol === 'invitado') {
+        return <Navbar bg="primary" variant="dark" expand='xl'>
+            <Container>
+                <Navbar.Brand href="/inicio">FERRETERIA ESPE</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                    <Nav className="justify-content-end ">
+                        <Nav.Link className="nav-link" href="/inicio">Inicio</Nav.Link>
+                        <Nav.Link className="nav-link" href="/categorias">Categorias</Nav.Link>
+                        <Nav.Link className="nav-link" href="/catalogo">Catalogo</Nav.Link>
+                        <Nav.Link className="nav-link" href="/contacto">Contacto</Nav.Link>
+                        
+                        <Link to="/">
+                            <Button type="button" variant="outline-light" onClick={cerrarSesion}>
+                                Cerrar Sesión de Invitado
+                            </Button>
+                        </Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
+    }
+
     if (obtenerDatosUsuario().nombreUsuario !== '' && obtenerDatosUsuario().rol === 'administrador') {
 
         (obtenerDatosUsuario());

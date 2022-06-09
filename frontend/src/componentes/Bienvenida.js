@@ -1,6 +1,9 @@
 import { Image } from "react-bootstrap";
+import { Navigate } from "react-router-dom";
+import { obtenerDatosUsuario } from "../funciones/usuario.funciones";
 
 export const Bienvenida = () => {
+
     return <div className="text-center justify-content-center" style={{ margin: '0px' }}>
         
         <br/>

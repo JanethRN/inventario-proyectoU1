@@ -15,7 +15,6 @@ export const Clientes = () => {
             <BarraNavegacion />
 
             <Container>
-                {/* https://img.freepik.com/vector-gratis/gente-compra-tienda-herramientas-ilustracion-dibujos-animados-hombre-plano-comprador-personajes-cliente-comprando-equipos-caja-herramientas-reparacion-casa_169479-804.jpg*/}
                 <div className="text-center justify-content-center" style={{ margin: '0px' }}>
 
                     <h2 style={{ margin: '24px', marginTop: '56px' }}>

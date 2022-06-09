@@ -1,17 +1,36 @@
 import { Navigate } from 'react-router-dom';
-import { Form, Button, Row, Col, Tabs, Tab } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useState, useEffect } from 'react';
-import { BarraNavegacion } from "./BarraNavegacion";
 import { obtenerDatosUsuario } from '../funciones/usuario.funciones';
+import { ModalProducto } from './ModalProducto';
+import { ModalAlerta } from './ModalAlerta';
+import { ModalActualizarProducto } from './ModalActualizarProducto';
 
-export const ListaProductos = () => {
-    let [data, setData] = useState([]);
-    const [validated, setValidated] = useState(false);
+export const ListaProductos = (datosProductos) => {
+    // console.log(datosProductos);
+    let [data, setData] = useState(
+        datosProductos.datosProductos
+    );
+    const [modalShow, setModalShow] = useState(false);
+    const [modalActualizar, setModalActualizar] = useState(false);
+    const [alertaShow, setAlertaShow] = useState(false);
+    const [datosProductoActual, setDatosProductoActual] = useState({
+        cantidad: 0,
+        categoria: "",
+        codigo: "",
+        descripcion: "",
+        id: "",
+        imagen: "",
+        nombre: "",
+        precio: 0,
+        proveedor: ""
+    });
 
     useEffect(
         () => {
             obtenerProductos();
-        }, []);
+        }, []
+    );
 
     const obtenerProductos = async () => {
         const res = await fetch('http://localhost:5000/productos');
@@ -19,20 +38,29 @@ export const ListaProductos = () => {
         setData(resData);
     };
 
-
-    const handleSubmit = (event) => {
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        setValidated(true);
-    };
-
+    // const requestOptions = {
+    //     method: 'DELETE',
+    //     mode: 'cors'
+    // };
 
     if (!obtenerDatosUsuario()) {
         return <Navigate to="/inicio" replace />;
+    }
+
+    const mostrarProductoCard = (producto) => {
+        setDatosProductoActual(producto);
+        setModalShow(true);
+    }
+
+
+    const mostrarActualizarProducto = (producto) => {
+        setDatosProductoActual(producto);
+        setModalActualizar(true);
+    }
+
+    const mostrarAlertaBorrar = (producto) => {
+        setDatosProductoActual(producto);
+        setAlertaShow(true);
     }
 
     return (
@@ -40,10 +68,9 @@ export const ListaProductos = () => {
             <div className='container'>
                 <h3 className="text-center justify-content-center">Gestionar Productos</h3>
                 <br />
-                <table className="table table-striped">
+                <table key={'lista-productos'} className="table table-striped">
                     <thead>
-                        <tr style={{textAlign: 'center'}}>
-                            <th>Id</th>
+                        <tr style={{ textAlign: 'center' }}>
                             <th>Código</th>
                             <th>Nombre</th>
                             <th>Categoria</th>
@@ -53,27 +80,47 @@ export const ListaProductos = () => {
                             <th>Opciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody key={'lista-productos-body'}>
                         {data.map((producto) => (
-                            <tr style={{textAlign: 'center'}} key={producto.id}>
-                                <td>{producto.id}</td>
+                            <tr style={{ textAlign: 'center' }} key={producto.codigo}>
                                 <td>{producto.codigo}</td>
                                 <td>{producto.nombre}</td>
                                 <td>{producto.categoria}</td>
-                                <td>{producto.precio}</td>
+                                <td>${parseFloat(producto.precio).toFixed(2)}</td>
                                 <td>{producto.cantidad}</td>
                                 <td>{producto.descripcion}</td>
-                                <td style={{textAlign: 'center'}}>
-                                    <Button variant="outline-info" type="summir" style={{margin: '8px 0px'}}>Ver</Button>
+                                <td style={{ textAlign: 'center' }}>
+                                    <Button id={'ver-'+producto.codigo} variant="outline-info" type="button" style={{ margin: '8px 0px' }} onClick={() => mostrarProductoCard(producto)}>Ver Producto</Button>
                                     <br />
-                                    <Button variant="outline-danger" type="summir" style={{margin: '8px 0px'}}>Eliminar</Button>
+                                    <Button variant="outline-success" type="submit" style={{ margin: '8px 0px' }} onClick={() => mostrarActualizarProducto(producto)} >Actualizar</Button>
                                     <br />
-                                    <Button variant="outline-success" type="submit" style={{margin: '8px 0px'}}>Actualizar</Button>
+                                    <Button id={'button-editar'+producto.codigo} variant="outline-danger" type="button" style={{ margin: '8px 0px' }} onClick={() => mostrarAlertaBorrar(producto)}>Eliminar</Button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+                <ModalProducto
+                    id={'modal-'+datosProductoActual.codigo}
+                    show={modalShow}
+                    onHide={() => setModalShow(false)}
+                    datosProducto={datosProductoActual}
+                />
+                <ModalActualizarProducto
+                    id={'modal-actualizar-'+datosProductoActual.codigo}
+                    show={modalActualizar}
+                    onHide={() => setModalActualizar(false)}
+                    onReLoad={() => obtenerProductos()}
+                    datosProducto={datosProductoActual}
+                />
+                <ModalAlerta
+                    id={'alerta-'+datosProductoActual.codigo}
+                    show={alertaShow}
+                    onHide={() => setAlertaShow(false)}
+                    tipo={'producto'}
+                    onReLoad={() => obtenerProductos()}
+                    datosEliminar={datosProductoActual}
+                /> 
             </div>
         </>
     );

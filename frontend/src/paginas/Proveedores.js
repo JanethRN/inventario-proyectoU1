@@ -21,7 +21,7 @@ export const Proveedores = () => {
                 </h2>
                 <Tabs defaultActiveKey="nuevo_proveedor" id="uncontrolled-tab-example" className="mb-3">
                     <Tab eventKey="nuevo_proveedor" title="Ingresar Nuevo Proveedor">
-                        <FormularioProveedor />
+                        <FormularioProveedor tipo="agregar" />
                     </Tab>
                     <Tab eventKey="gestion_proveedor" title="Gestionar Proveedores" className='container'>
                         <ListaProveedores />

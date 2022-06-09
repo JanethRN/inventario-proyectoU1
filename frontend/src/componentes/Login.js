@@ -1,7 +1,6 @@
 import { Row, Col, Form, Button, Container } from "react-bootstrap";
 import { useState } from 'react';
 import { Link, useNavigate, Navigate } from "react-router-dom";
-import { userData } from '../config/data-config';
 import { Bienvenida } from "./Bienvenida";
 import { BarraNavegacion } from "./BarraNavegacion";
 import { guardarDatosUsuario, obtenerDatosUsuario } from "../funciones/usuario.funciones";
@@ -34,20 +33,19 @@ export const Login = () => {
     const enviarDatosLogin = async () => {
         const res = await fetch('http://localhost:5000/login', requestOptions);
         const resData = await res.json();
-        // setData(resData);
-        // (resData.login);
+        const userData = {
+            nombreUsuario: "",
+            rol: "",
+            correo: "",
+        } 
+
         if (resData.login) {
             userData.nombreUsuario = resData.datosUsuario.nombreUsuario;
             userData.rol = resData.datosUsuario.rol;
             userData.correo = resData.datosUsuario.correo;
-            // localStorage.setItem('userData', userData);
             guardarDatosUsuario(userData);
             navigate('/inicio');
-            // return <Navigate to="/" replace />;
         } else {
-            userData.nombreUsuario = "";
-            userData.rol = "";
-            userData.correo = "";
             localStorage.setItem('userData', userData);
             setMensajeError('Usuario no registrado');
         }
@@ -77,8 +75,20 @@ export const Login = () => {
         }
     }
 
-    
-
+    const iniciarInvitado = () => {
+        // const userData = {
+        //     nombreUsuario: "invitado",
+        //     rol: "invitado",
+        //     correo: "invitado@espe.com",
+        // }
+        guardarDatosUsuario({
+            nombreUsuario: "invitado",
+            rol: "invitado",
+            correo: "invitado@espe.com",
+        });
+        navigate('/inicio');
+        // return <Navigate to="/inicio" replace />;
+    }
 
     return <>
 
@@ -126,8 +136,8 @@ export const Login = () => {
                                 <label><br />- o -</label>
                                 <br />
                                 <br />
-                                <Link to="/invitado">
-                                    <Button variant="outline-primary" >Ingresar Como Invitado</Button>
+                                <Link to="/">
+                                    <Button variant="outline-primary"  onClick={() => {iniciarInvitado()}}>Ingresar Como Invitado</Button>
                                 </Link>
                             </div>
                         </Form>

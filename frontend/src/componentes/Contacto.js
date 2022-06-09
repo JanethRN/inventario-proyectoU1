@@ -7,7 +7,6 @@ export const Contacto = () => {
     return <>
         <BarraNavegacion />
         <Container>
-            {/* https://img.freepik.com/vector-gratis/gente-compra-tienda-herramientas-ilustracion-dibujos-animados-hombre-plano-comprador-personajes-cliente-comprando-equipos-caja-herramientas-reparacion-casa_169479-804.jpg*/}
             <div className="text-center justify-content-center" style={{ margin: '0px' }}>
 
                 <h2 style={{ margin: '24px', marginTop: '56px' }}>
@@ -48,9 +47,6 @@ export const Contacto = () => {
                         </span>
                     </Col>
                 </Row>
-                {/* <span >
-                    Además, en nuestra ferreteria tendrá una atención preferencial y personalizada, ya que para Ferreteria ESPE lo más importante es usted.
-                </span> */}
                 <br />
                 <br />
                 <br />
