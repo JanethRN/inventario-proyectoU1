@@ -1,28 +1,30 @@
-import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { obtenerDatosUsuario } from '../funciones/usuario.funciones';
 
 export const InformeProductos = () => {
+    // Inicialización de variables
     let [data, setData] = useState([]);
     let [total, setTotal] = useState([]);
-
+    
+    // Función propia de react para la inicialización de variables y llamadas a APIs cada vez que nuestro componente se renderice
     useEffect(
         () => {
-            obtenerProductos();
+            obtenerInformeProductos();
         }, []);
-
-    const obtenerProductos = async () => {
+    
+    // Funcion para cargar la lista de informe monetario de productos mediante
+    // Una petición al API de productos de Flask
+    const obtenerInformeProductos = async () => {
+        // Petición al API FLASK
         const res = await fetch('http://localhost:5000/informe-productos');
+        // Conversión de la respuesta del API en json 
         const resData = await res.json();
+        // Sumatoria total del precio por la cantidad de cada producto
         const total = resData.reduce((sumatoria, datosProducto) => ( typeof datosProducto.total == "number" ? sumatoria + datosProducto.total : sumatoria), 0);
-        setData(resData);
-        setTotal(total);
+        setData(resData); // Almacenamiento de los datos recibidos como respuesta a la petición
+        setTotal(total); // Almacenamiento de la sumatoria total monetaria de los productos
     };
 
-    if (!obtenerDatosUsuario()) {
-        return <Navigate to="/inicio" replace />;
-    }
-
+    // Generación de la la tabla de informe monetario de productos apartir de la lista obtenida del api de Flask
     return (
         <>
             <div className='container'>
@@ -39,6 +41,7 @@ export const InformeProductos = () => {
                         </tr>
                     </thead>
                     <tbody>
+                        {/* Mapeo de los datos obtenidos con el API de FLASK para obtener los proyectos y añadirlos a la tabla */}
                         {data.map((producto) => (
                             <tr style={{ textAlign: 'center' }} key={producto.id}>
                                 <td>{producto.codigo}</td>

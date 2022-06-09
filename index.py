@@ -2,6 +2,7 @@
 from flask import Flask, request, jsonify
 # from flask_cors import cross_origin
 from flask_cors import CORS
+from flask import Flask, render_template
 
 #Diccionario con datos de prueba para usuarios
 diccionario_usuarios = {
@@ -113,7 +114,8 @@ cors = CORS(app , resources={r"/*": {"origins": "http://localhost:3000" }})
 @app.route('/')
 #Función para acceder al backend
 def principal(): 
-    return '<h1>Backend Ferreteria ESPE</h1>'
+    # return '<h1>Backend Ferreteria ESPE</h1>'
+    return render_template('buil/index.html')
 
 # ------------- API para el acceso del usuario
 #Ruta para obtener los datos de un usuario segun su ID

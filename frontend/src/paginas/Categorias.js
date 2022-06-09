@@ -14,9 +14,11 @@ export const Categorias = () => {
     if (!obtenerDatosUsuario()) {
         return <Navigate to="/inicio" replace />;
     }
-
-
-    if (obtenerDatosUsuario().nombreUsuario !== '' && obtenerDatosUsuario().rol === 'invitado') {
+    
+    // Validación para controlar el acceso a la pagina
+    // Con la muestra solo del componente de lista de productos por categoria 
+    // Solo para el usuario INVITADOs
+    if (obtenerDatosUsuario().nombreUsuario !== '' && obtenerDatosUsuario().rol == 'invitado') {
         return (
             <>
                 <BarraNavegacion /> {/* Componente de la barra de navagación*/}

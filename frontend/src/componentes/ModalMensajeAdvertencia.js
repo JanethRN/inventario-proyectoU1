@@ -1,9 +1,11 @@
 import { Button, Image, Modal, Row } from "react-bootstrap"
 
 export const ModalMensajeAdvertencia = ({ show, onHide, tipo }) => {
-
-    if (tipo == 'stock') {
-
+    // Validación del tipo de mensaje debe mostrarse en pantalla
+    if (tipo === 'stock') {
+        // Generación del componente de Mensaje de Advertencia con:
+        // El componente Barra de navegación y un contenedor con el contenido del componente
+        // Con el uso del elemento Modal de bootstrap, Row y Button
         return <Modal
             show={show}
             onHide={onHide}
@@ -17,7 +19,7 @@ export const ModalMensajeAdvertencia = ({ show, onHide, tipo }) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body >
-                <Row >
+                <Row >  {/* Elemento Row de Bootstrap */}
                     <span style={{ textAlign: 'center', width: '100%' }}>
                         El codigo que ingreso no esta registtrado en el sistema.
                         Verifica el código o ingresalo como un nuevo producto.
@@ -29,6 +31,7 @@ export const ModalMensajeAdvertencia = ({ show, onHide, tipo }) => {
             </Modal.Body>
 
             <Modal.Footer >
+                {/* Elemento Botton de Bootstrap con la acción de cancelar*/}
                 <Button variant="outline-success" onClick={onHide}>
                     Continuar
                 </Button>

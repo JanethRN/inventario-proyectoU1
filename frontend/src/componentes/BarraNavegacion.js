@@ -9,7 +9,7 @@ export const BarraNavegacion = () => {
         borrarDatosUsuario();
     }
     // Verificación de la existencia de los datos de login del usuario en la aplicación
-    if (obtenerDatosUsuario() === null) {
+    if (obtenerDatosUsuario() == null) {
         // Generación de la barra de navegación para los usuarios no logueados
         return <Navbar bg="primary" variant="dark" expand='xl'>
             <Container> {/* Contenedor de la barra de navegación */}
@@ -27,7 +27,7 @@ export const BarraNavegacion = () => {
     }
 
     // Comprobación de si los datos de login del usuario registrados en la aplicación pertenecen a INVITADO
-    if (obtenerDatosUsuario().nombreUsuario !== '' && obtenerDatosUsuario().rol === 'invitado') {
+    if (obtenerDatosUsuario().nombreUsuario !== '' && obtenerDatosUsuario().rol == 'invitado') {
         // Generación de la barra de navegación para el usuario INVITADO
         return <Navbar bg="primary" variant="dark" expand='xl'>
             <Container> {/* Contenedor de la barra de navegación */}
@@ -51,7 +51,7 @@ export const BarraNavegacion = () => {
     }
 
     // Comprobación de si los datos de login del usuario registrados en la aplicación pertenecen a un ADMINISTRADOR
-    if (obtenerDatosUsuario().nombreUsuario !== '' && obtenerDatosUsuario().rol === 'administrador') {
+    if (obtenerDatosUsuario().nombreUsuario !== '' && obtenerDatosUsuario().rol == 'administrador') {
         // Generación de la barra de navegación para el usuario ADMINISTRADOR
         return <Navbar bg="primary" variant="dark" expand='xl'>
             <Container> {/* Contenedor de la barra de navegación */}

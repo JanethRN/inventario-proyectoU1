@@ -2,7 +2,7 @@ import { Image, Modal, Row } from "react-bootstrap"
 
 export const ModalProducto = ({ id, show, onHide, datosProducto }) => {
     // Generación del componente ModalProducto para mostrar el producto completo
-    // Con el uso del elemento Modal de bootstrap,, Row e Image
+    // Con el uso del elemento Modal de bootstrap, Row e Image
     return <Modal
         id={id}
         show={show}
@@ -15,11 +15,13 @@ export const ModalProducto = ({ id, show, onHide, datosProducto }) => {
                 <b>{datosProducto.nombre.toUpperCase()}</b>
             </Modal.Title>
         </Modal.Header>
+
         <Modal.Body >
             <Row > {/* Contenido del modal con los datos del producto */}
                 <h6 style={{ textAlign: 'center', marginTop: '16px', marginBottom: '24px' }}>
                     <b>Código: </b> {datosProducto.codigo}
                 </h6>
+
                 <Image variant="top" src={datosProducto.imagen} style={{ margin: 'auto', padding: '8px', width: '50%' }} />
 
                 <span style={{ textAlign: 'center', width: '100%', marginTop: '20px' }}>

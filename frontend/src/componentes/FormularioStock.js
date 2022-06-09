@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { ModalMensajeAdvertencia } from "./ModalMensajeAdvertencia";
 
 export const FormularioStock = () => {
+    // Inicialización de variables
     let [data, setData] = useState([]);
     const [alertaShow, setAlertaShow] = useState(false);
     const [codigoProducto, setCodigoProducto] = useState("");
     const [nuevaCantidad, setNuevaCantidad] = useState(0);
     const [totalCantidad, setTotalCantidad] = useState(0);
-
     const [datosProducto, setDatosProducto] = useState({
         id: 0,
         nombre: "",
@@ -17,13 +17,19 @@ export const FormularioStock = () => {
         precio: 0.00,
         cantidad: 0,
     });
-
+    // Funcion para obtner los datos de un producto espedifico mediante el codigo del producto atravez de
+    // Una petición al API de productos de Flask
     const obtenerProductoPorCodigo = async () => {
+        // Verificación del que el codigo de producto a buscar no este en blanco
         if (codigoProducto !== '') {
+            // Petición al API FLASK
             const res = await fetch('http://localhost:5000/producto/' + codigoProducto);
-            const resData = await res.json();
-            setData(resData)
+            const resData = await res.json(); // Conversión de la respuesta del API en json
+            setData(resData); // Almacenamiento de los datos recibidos como respuesta a la petición
+
+            // verificación para comprobar si el producto fue encontrado
             if (resData.encontrado) {
+                // Si el producto fue encontrado se guarda los datos del producto
                 setDatosProducto({
                     ...datosProducto,
                     nombre: resData.datosProducto.nombre,
@@ -32,15 +38,21 @@ export const FormularioStock = () => {
                     precio: resData.datosProducto.precio,
                     cantidad: resData.datosProducto.cantidad
                 });
-
+                // Ademas se verifica si la nueva cantidad que ingreso el usuario es mayor a cero
+                // para pasar a sumarlo y guardarlo
                 if (nuevaCantidad > 0) {
+                    // Almacenamiento de la sumatoria de la nueva cantidac con la cantidad actual del producto
                     setTotalCantidad(
                         parseInt(nuevaCantidad) + parseInt(resData.datosProducto.cantidad)
                     );
                 } else {
+                    // Caso contrario la sumatoria total de cantidades solo sera igual a la cantidad actual del producto
                     setTotalCantidad(parseInt(resData.datosProducto.cantidad));
                 }
             } else {
+                // Y en el caso de que no se enceuintre el producto que se busca se muetsa 
+                // Una alerta en pantalla de producto no encontrado,
+                // Y todos los campos del formulario se resetean 
                 mostrarAlerta();
                 setDatosProducto({
                     ...datosProducto,
@@ -53,8 +65,7 @@ export const FormularioStock = () => {
             }
         }
     };
-
-
+    // Especificaicón de las opciones necesarias para la petición al api FLASK
     const requestOptions = {
         method: 'PUT',
         headers: {
@@ -68,50 +79,61 @@ export const FormularioStock = () => {
         mode: 'cors',
     };
 
+    // Funcion para actualizar el stock de un producto atravez de
+    // Una petición al API de productos de Flask
     const actulizarStock = async () => {
+        // Petición al API FLASK
         const res = await fetch('http://localhost:5000/stock', requestOptions);
-        const resProducto = await res.json();
+        const resProducto = await res.json(); // Conversión de la respuesta del API en json 
+        // Almacenamiento de datos
         setCodigoProducto(datosProducto.codigo);
         setTotalCantidad(0);
         setNuevaCantidad(0);
-        setDatosProducto(
-            resProducto
-        );
+        setDatosProducto(resProducto);
     };
 
+    // Funcion para ejecutar la acción de summit del formulario
     const handleSubmit = (event) => {
-        event.preventDefault();
-        actulizarStock();
+        event.preventDefault(); //Detiene la recarga de la pagina tras el sumit del formulario
+        actulizarStock(); // Llamada a la funcion de actualización de stock
     };
 
+    // Funcion para tomar el valor de los imputs y almacenarlo en el objeto Producto
     const handleInputChange = (event) => {
         setDatosProducto({
             ...datosProducto,
             [event.target.name]: event.target.value
         })
     }
-
+    // Función para actualizar la contidad Total de stok
     const actualizarCantidadTotal = (cantidad) => {
+        // Almacenamiento del la nueva cantidad ingresada por el usuario
         setNuevaCantidad(cantidad);
+        // Veriificación de si la cantidad ingresada es mayor a 0
         if (cantidad > 0) {
+            // SI cumple la condición se alamcena la sumatoria del la cantidad ingresada con la cantidad de producto actual 
+            // en la cantidad total 
             setTotalCantidad(
                 parseInt(cantidad) + parseInt(datosProducto.cantidad)
             );
         } else {
+            // Si no se cumple la condición en el valor total se almacenara unicamente la cantidad actualdel producto
             setTotalCantidad(parseInt(datosProducto.cantidad));
         }
     }
-
+    // Funcion para mostrar la alerta de que no existe un producto con el codigo ingresado
     const mostrarAlerta = () => {
         setAlertaShow(true);
     }
 
+    // Generación del formulario para actualizar el stock del producto
     return (
         <>
             <div className='container'>
                 <br />
                 <h3 className="text-center justify-content-center">Buscar por Código de Producto</h3>
                 <br />
+                {/* Creación del buscador con los elementos InputGroup, FormControl y Button de bootstrap */}
                 <InputGroup className="mb-3">
                     <FormControl
                         onChange={e => setCodigoProducto(e.target.value)} value={codigoProducto}
@@ -124,11 +146,11 @@ export const FormularioStock = () => {
                 </InputGroup>
                 <br />
 
-                <Container>
+                <Container>  {/* Elemento container de bootstrap para agrupar el formulario y demas contenido*/}
                     <h3 className="text-center justify-content-center">Ingresar Stock a un Producto</h3>
                     <br />
                     <br />
-
+                    {/* Formulario para la actualización de stock del prodcuto */}
                     <Form onSubmit={handleSubmit} >
                         <Form.Group className="mb-3" controlId="formBasicCodigo" as={Row}>
                             <Form.Label column sm="2">Código Producto*</Form.Label>
@@ -194,6 +216,7 @@ export const FormularioStock = () => {
                 <br />
                 <br />
             </div>
+            {/* Construcción del componente ModalMensajeAdvertencia */}
             <ModalMensajeAdvertencia
                 tipo={'stock'}
                 show={alertaShow}

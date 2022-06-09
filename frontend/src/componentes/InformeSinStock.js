@@ -1,25 +1,26 @@
-import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { obtenerDatosUsuario } from '../funciones/usuario.funciones';
 
 export const InformeSinStock = () => {
+    // Inicialización de variables
     let [data, setData] = useState([]);
 
+    // Función propia de react para la inicialización de variables y llamadas a APIs cada vez que nuestro componente se renderice
     useEffect(
         () => {
-            obtenerProductos();
+            obtenerInformeProductosSinStock(); // Ejecución de la funcion para cargar la lista de productos
         }, []);
 
-    const obtenerProductos = async () => {
+    // Funcion para cargar la lista de informe sin stock registrados mediante
+    // Una petición al API de productos de Flask
+    const obtenerInformeProductosSinStock = async () => {
+        // Petición al API FLASK
         const res = await fetch('http://localhost:5000/informe-sin-stock');
+        // Conversión de la respuesta del API en json 
         const resData = await res.json();
-        setData(resData);
+        setData(resData); // Almacenamiento de los datos recibidos como respuesta a la petición
     };
 
-    if (!obtenerDatosUsuario()) {
-        return <Navigate to="/inicio" replace />;
-    }
-
+    // Generación de la la tabla de productos sin stock apartir de la lista obtenida del api de Flask
     return (
         <>
             <div className='container'>
@@ -38,6 +39,7 @@ export const InformeSinStock = () => {
                         </tr>
                     </thead>
                     <tbody>
+                        {/* Mapeo de los datos obtenidos con el API de FLASK para obtener las categorias y añadirlos a la tabla */}
                         {data.map((producto) => (
                             <tr style={{ textAlign: 'center' }} key={producto.id}>
                                 <td>{producto.codigo}</td>

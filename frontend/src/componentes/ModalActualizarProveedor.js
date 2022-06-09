@@ -16,6 +16,7 @@ export const ModalActualizarProveedor = ({ id, show, onHide, onReLoad, datosProv
                 <b>RUC: {datosProveedor.ruc}</b>
             </Modal.Title>
         </Modal.Header>
+        
         <Modal.Body >
             {/* Componente del formulario de proveedor*/}
             <FormularioProveedor tipo={'actualizar'} proveedor={datosProveedor} onReLoad={() => { onReLoad() }} onHide={() => { onHide(false) }} />

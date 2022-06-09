@@ -2,10 +2,10 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 
 export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
+    // Inicialización de variables
     let [categorias, setCategorias] = useState([]);
     let [proveedores, setProveedores] = useState([]);
     const [validated, setValidated] = useState(false);
-
     const [datosProducto, setDatosProducto] = useState({
         id: 0,
         nombre: "",
@@ -17,19 +17,27 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
         descripcion: "",
         imagen: "",
     });
-
+    
+    // Función propia de react para la inicialización de variables y llamadas a APIs cada vez que nuestro componente se renderice
     useEffect(
         () => {
-            obtenerCategorias();
-            obtenerProveedores();
-            obtenerProductos();
+            obtenerCategorias(); // Ejecución de la funcion para cargar la lista de ccategorias
+            obtenerProveedores(); // Ejecución de la funcion para cargar la lista de proveedores
+            obtenerProductos(); // Ejecución de la funcion para cargar la lista de productos
         },[]);
 
-
+    
+    // Funcion para obtener los datos de prodcutos mediante
+    // Una petición al API de prodtcos de Flask para generar el id y el codigo del producto
+    // O almacenar el producto que se recibe como parametro para ser actualizado
     const obtenerProductos = async () => {
-        if (tipo == 'agregar') {
+        // Verificación del tipo de formulario que se construira
+        if (tipo === 'agregar') {
+            // Si es de tipo agregar se realizara la petición al API de Flask
             const res = await fetch('http://localhost:5000/productos');
+            // Conversion a json
             const resData = await res.json();
+            // almacenamiento de los datos  de productos
             setDatosProducto({
                 ...datosProducto,
                 id: "" + resData.length + "",
@@ -37,7 +45,9 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
                 image: 'https://ingcoecuador.com/wp-content/uploads/2020/07/uni.png'
             });
         } else {
+            // Si es de otro tipo se verificara si existen datos de un producto
             if(producto !== undefined) {
+                // si existen datos de producto recibido como parametro, este será almacenado para ser actualziado
                 setDatosProducto({
                     ...producto,
                 });
@@ -45,18 +55,29 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
         }
     };
 
+    // Funcion para obtener todas las categorias mediante
+    // Una petición al API de categorias de Flask
     const obtenerCategorias = async () => {
+        // Petición al API FLASK
         const res = await fetch('http://localhost:5000/categorias');
+        // Conversión a json
         const resCategorias = await res.json();
+        // Almacenamiento de la lista de categorias
         setCategorias(resCategorias);
     };
 
+    // Funcion para obtener todas las proveedores mediante
+    // Una petición al API de categorias de Flask
     const obtenerProveedores = async () => {
+        // Petición al API FLASK
         const res = await fetch('http://localhost:5000/proveedores');
+        // Conversión a json
         const resProveedores = await res.json();
+        // Almacenamiento de la lista de proveedores
         setProveedores(resProveedores);
     };
 
+    // Especificaicón de las opciones necesarias para la petición al api FLASK
     const requestOptions = {
         method: 'POST',
         headers: {
@@ -66,12 +87,17 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
         body: JSON.stringify(datosProducto),
         mode: 'cors',
     };
-
+    
+    // Funcion para agregar un nuevo producto mediante
+    // Una petición al API de productos de Flask
     const agregarProducto = async () => {
+        // Petición al API FLASK
         const res = await fetch('http://localhost:5000/productos', requestOptions);
+        // Ejecución de la funcion para recargar la pagina con los nuevos datos
         window.location.reload(false);
     };
     
+    // Especificaicón de las opciones necesarias para la petición al api FLASK
     const requestOptionsUpdate = {
         method: 'PUT',
         headers: {
@@ -82,34 +108,39 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
         mode: 'cors',
     };
 
+    // Funcion para actualizar un producto mediante
+    // Una petición al API de productos de Flask
     const actualizarProducto = async () => {
+        // Petición al API FLASK
         const res = await fetch('http://localhost:5000/productos', requestOptionsUpdate);
-        const resProducto = await res.json();
-        obtenerProductos();
-        console.log(resProducto)
-        onReLoad();
-        onHide(false);
+        onReLoad(); // Ejecución de la funcion recibida por referencia para recargar los datos de la lista de productos
+        onHide(false); // Ejecución de la funcion recibida por referencia para ocultar el modal de la pantalla
     };
 
+    // Funcion para comprobar si los datos ingresados en le formulario son validos
     const handleSubmit = (event) => {
-        event.preventDefault();
+        event.preventDefault(); // Funcion para detener la carga de pantalla tras el summit del formulario
         const form = event.currentTarget;
-
+        // Validación para conprobar si el formulario e svalido
         if (form.checkValidity() === false) {
+            // Si no es valido se muestran los errores correspondientes
             event.preventDefault();
             event.stopPropagation();
             setValidated(true);
         } else {
             setValidated(true);
-            if (tipo == 'agregar') {
-                return agregarProducto();
+            // Si el formulario es valido segun el tipo de formulario que se lleno,
+            // Se realizara la agregación o actualización del producto
+            if (tipo === 'agregar') {
+                return agregarProducto();  // Ejecución de la funcion para agregar un nuevo producto
             } else {
-                return actualizarProducto();
+                return actualizarProducto(); // Ejecución de la funcion para actualizar un producto
             }
         }
        
     };
-
+    
+    // Funcion para tomar el valor de los imputs y almacenarlo en el objeto datosProveedor
     const handleInputChange = (event) => {
         setDatosProducto({
             ...datosProducto,
@@ -117,8 +148,9 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
         })
     }
 
+    // Funcion para actualizar el estado del boton segun el tipo de formulario
     const actualizarEstadoBoton = () => {
-        if (tipo == 'agregar') {
+        if (tipo === 'agregar') {
             return 'Agregar';
         } else {
             if(producto !== undefined) {
@@ -127,8 +159,9 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
         } 
     }
     
+    // Funcion para actualizar el estado del titulo segun el tipo de formulario
     const actualizarEstadoTitulo = () => {
-        if (tipo == 'agregar') {
+        if (tipo === 'agregar') {
             return 'Ingresar un Nuevo Producto';
         } else {
             if(producto !== undefined) {
@@ -136,7 +169,8 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
             }
         } 
     }
-
+    
+    // Generación del formulario de productos
     return (
         <>
             <div className='container'>
@@ -144,6 +178,7 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
                     {(actualizarEstadoTitulo())}
                 </h3>
                 <br />
+                {/* Creación del formulario de productos, con el elemento de Form de Bootstrap*/}
                 <Form noValidate validated={validated} onSubmit={handleSubmit} >
                     <Form.Group className="mb-3" controlId="formBasicCodigo" as={Row}>
                         <Form.Label column sm="2">Codigo *</Form.Label>
