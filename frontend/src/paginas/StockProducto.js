@@ -6,25 +6,24 @@ import { FormularioStock } from '../componentes/FormularioStock';
 
 export const StockProducto = () => {
 
+    // Validación para controlar el acceso a la pagina
+    // Con la redirección a la pagina de inicio
+    // si la aplicación no registra los datos del usuario logueado
     if (!obtenerDatosUsuario()) {
         return <Navigate to="/inicio" replace />;
     }
 
+    // Generación de la página de STOCK de Productos con:
+    // El componente Barra de navegación y un contenedor con el contenido de la página
+    // Junto con el componente Formulario Stock
     return (
         <>
-            <BarraNavegacion />
-            <Container>
+            <BarraNavegacion /> {/* Componente de la barra de navagación*/}
+            <Container> {/* Contenedor del contenido de la pagina */}
                 <h2 style={{ margin: '24px', textAlign: 'center' }}>
                     MÓDULO DE STOCK DE PRODUCTO
                 </h2>
-                {/* <Tabs defaultActiveKey="nuevo_roducto" id="uncontrolled-tab-example" className="mb-3">
-                    <Tab eventKey="nuevo_roducto" title="Ingresar Nuevo Producto"> */}
-                        <FormularioStock />
-                    {/* </Tab>
-                    <Tab eventKey="gestión_roductos" title="Gestionar Productos" className='container'> */}
-                        {/* <ListaProductos /> */}
-                    {/* </Tab>
-                </Tabs> */}
+                <FormularioStock /> {/* Componente del formulario de stock*/}
             </Container>
         </>
     );

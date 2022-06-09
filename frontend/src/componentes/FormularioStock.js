@@ -68,7 +68,6 @@ export const FormularioStock = () => {
         mode: 'cors',
     };
 
-
     const actulizarStock = async () => {
         const res = await fetch('http://localhost:5000/stock', requestOptions);
         const resProducto = await res.json();
@@ -79,7 +78,6 @@ export const FormularioStock = () => {
             resProducto
         );
     };
-
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -104,11 +102,9 @@ export const FormularioStock = () => {
         }
     }
 
-
     const mostrarAlerta = () => {
         setAlertaShow(true);
     }
-
 
     return (
         <>

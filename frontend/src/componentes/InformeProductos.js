@@ -19,7 +19,6 @@ export const InformeProductos = () => {
         setTotal(total);
     };
 
-
     if (!obtenerDatosUsuario()) {
         return <Navigate to="/inicio" replace />;
     }

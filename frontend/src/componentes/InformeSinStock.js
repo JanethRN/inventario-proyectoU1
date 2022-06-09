@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { obtenerDatosUsuario } from '../funciones/usuario.funciones';
 
-export const InformeSinStok = () => {
+export const InformeSinStock = () => {
     let [data, setData] = useState([]);
 
     useEffect(
@@ -15,7 +15,6 @@ export const InformeSinStok = () => {
         const resData = await res.json();
         setData(resData);
     };
-
 
     if (!obtenerDatosUsuario()) {
         return <Navigate to="/inicio" replace />;

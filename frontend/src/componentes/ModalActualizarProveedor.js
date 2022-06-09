@@ -2,7 +2,8 @@ import { Modal } from "react-bootstrap"
 import { FormularioProveedor } from "./FormularioProveedor"
 
 export const ModalActualizarProveedor = ({ id, show, onHide, onReLoad, datosProveedor }) => {
-
+    // Generación del componente ModalActualizarProveedor para actualizar provedores
+    // Con el uso del elemento Modal de bootstrap y el componente FormularioProducto
     return <Modal
         id={id}
         show={show}
@@ -16,6 +17,7 @@ export const ModalActualizarProveedor = ({ id, show, onHide, onReLoad, datosProv
             </Modal.Title>
         </Modal.Header>
         <Modal.Body >
+            {/* Componente del formulario de proveedor*/}
             <FormularioProveedor tipo={'actualizar'} proveedor={datosProveedor} onReLoad={() => { onReLoad() }} onHide={() => { onHide(false) }} />
         </Modal.Body>
     </Modal>

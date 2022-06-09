@@ -15,7 +15,6 @@ export const ListaCategorias = () => {
         setData(resData)
     };
 
-
     if (!obtenerDatosUsuario()) {
         return <Navigate to="/inicio" replace />;
     }

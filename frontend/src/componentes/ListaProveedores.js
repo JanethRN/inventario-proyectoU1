@@ -84,9 +84,9 @@ export const ListaProveedores = () => {
                         ))}
                     </tbody>
                 </table>
-                
+
                 <ModalActualizarProveedor
-                    id={'modal-actualizar-'+datosProveedorActual.ruc}
+                    id={'modal-actualizar-' + datosProveedorActual.ruc}
                     show={modalActualizar}
                     onHide={() => setModalActualizar(false)}
                     onReLoad={() => obtenerProveedores()}
@@ -94,14 +94,14 @@ export const ListaProveedores = () => {
                 />
 
                 <ModalAlerta
-                    id={'alerta-'+datosProveedorActual.ruc}
+                    id={'alerta-' + datosProveedorActual.ruc}
                     show={alertaShow}
                     onHide={() => setAlertaShow(false)}
                     tipo={'proveedor'}
                     onReLoad={() => obtenerProveedores()}
                     datosEliminar={datosProveedorActual}
                 />
-                
+
             </div >
         </>
     );

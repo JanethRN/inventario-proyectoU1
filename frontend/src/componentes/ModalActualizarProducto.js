@@ -1,28 +1,24 @@
-import { useState } from "react";
-import { Image, Modal, Row } from "react-bootstrap"
+import { Modal } from "react-bootstrap"
 import { FormularioProducto } from "./FormularioProducto"
 
 export const ModalActualizarProducto = ({ id, show, onHide, onReLoad, datosProducto }) => {
-    
-    // const [alertaShow, setAlertaShow] = useState(show);
-    // const [ hide, setHide] = useState(onHide);
-    // onReLoad();
-    // onHide(false);
-
+    // Generación del componente ModalActualizarProducto para actualizar productos
+    // Con el uso del elemento Modal de bootstrap y el componente FormularioProducto
     return <Modal
-            id = {id}
-            show={show}
-            onHide={onHide}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header style={{ textAlign: 'center'}} closeButton>
-                <Modal.Title style={{ textAlign: 'center', width: '100%'}}>
+        id={id}
+        show={show}
+        onHide={onHide}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+    >
+        <Modal.Header style={{ textAlign: 'center' }} closeButton>
+            <Modal.Title style={{ textAlign: 'center', width: '100%' }}>
                 <b>{datosProducto.codigo.toUpperCase()}</b>
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body >
-                <FormularioProducto tipo={'actualizar'} producto={datosProducto} onReLoad={()=>{onReLoad()}} onHide={()=>{onHide(false)}} />
-            </Modal.Body>
-        </Modal>
+            </Modal.Title>
+        </Modal.Header>
+        <Modal.Body >
+            {/* Componente del formulario de producto*/}
+            <FormularioProducto tipo={'actualizar'} producto={datosProducto} onReLoad={() => { onReLoad() }} onHide={() => { onHide(false) }} />
+        </Modal.Body>
+    </Modal>
 }

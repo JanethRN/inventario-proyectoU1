@@ -20,8 +20,6 @@ export const FormularioCategoria = () => {
             'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify({
-            // codigo: datosProducto.codigo,
-            // nuevaCantidad: totalCantidad
             id: '' + categorias.length,
             nombre: nombre,
             codigo: codigoCategoria
@@ -39,7 +37,6 @@ export const FormularioCategoria = () => {
     const obtenerCategorias = async () => {
         const resData = await fetch('http://localhost:5000/categorias');
         const resCategorias = await resData.json();
-        // console.log(resCategorias);
         setCategorias(resCategorias);
         setCodigoCategoria(
             'CAT-' + (resCategorias.length + 1 ), 
@@ -56,7 +53,6 @@ export const FormularioCategoria = () => {
         console.log(nombre)
         setValidated(true);
     };
-
 
     return (
         <>

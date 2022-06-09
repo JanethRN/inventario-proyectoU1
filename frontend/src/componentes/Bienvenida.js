@@ -1,11 +1,9 @@
 import { Image } from "react-bootstrap";
-import { Navigate } from "react-router-dom";
-import { obtenerDatosUsuario } from "../funciones/usuario.funciones";
 
 export const Bienvenida = () => {
-
+    // Generación del componente Bienvenida con el contenido correspondiente 
+    // Junto con una imagen representativa
     return <div className="text-center justify-content-center" style={{ margin: '0px' }}>
-        
         <br/>
         <h2 style={{ margin: '24px', marginTop: '56px' }}>
             BIENVENIDOS A FERRETERIA ESPE

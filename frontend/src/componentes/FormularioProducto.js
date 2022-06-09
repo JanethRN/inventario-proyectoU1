@@ -69,7 +69,6 @@ export const FormularioProducto = ({tipo, producto, onHide, onReLoad}) => {
 
     const agregarProducto = async () => {
         const res = await fetch('http://localhost:5000/productos', requestOptions);
-        // obtenerProductos();
         window.location.reload(false);
     };
     

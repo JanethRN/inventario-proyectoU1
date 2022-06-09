@@ -6,11 +6,8 @@ import { ModalProducto } from './ModalProducto';
 import { ModalAlerta } from './ModalAlerta';
 import { ModalActualizarProducto } from './ModalActualizarProducto';
 
-export const ListaProductos = (datosProductos) => {
-    // console.log(datosProductos);
-    let [data, setData] = useState(
-        datosProductos.datosProductos
-    );
+export const ListaProductos = () => {
+    let [data, setData] = useState([{}]);
     const [modalShow, setModalShow] = useState(false);
     const [modalActualizar, setModalActualizar] = useState(false);
     const [alertaShow, setAlertaShow] = useState(false);
@@ -38,11 +35,6 @@ export const ListaProductos = (datosProductos) => {
         setData(resData);
     };
 
-    // const requestOptions = {
-    //     method: 'DELETE',
-    //     mode: 'cors'
-    // };
-
     if (!obtenerDatosUsuario()) {
         return <Navigate to="/inicio" replace />;
     }
@@ -51,7 +43,6 @@ export const ListaProductos = (datosProductos) => {
         setDatosProductoActual(producto);
         setModalShow(true);
     }
-
 
     const mostrarActualizarProducto = (producto) => {
         setDatosProductoActual(producto);
@@ -82,7 +73,7 @@ export const ListaProductos = (datosProductos) => {
                     </thead>
                     <tbody key={'lista-productos-body'}>
                         {data.map((producto) => (
-                            <tr style={{ textAlign: 'center' }} key={producto.codigo}>
+                            <tr style={{ textAlign: 'center' }} key={'prod-'+producto.codigo}>
                                 <td>{producto.codigo}</td>
                                 <td>{producto.nombre}</td>
                                 <td>{producto.categoria}</td>

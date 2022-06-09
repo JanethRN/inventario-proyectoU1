@@ -47,8 +47,6 @@ export const FormularioProveedor = ({tipo, proveedor, onReLoad, onHide}) => {
             event.preventDefault();
             event.stopPropagation();
         } else {
-            // console.log('tipo')
-            // return agregarProducto();
             if (tipo == 'agregar') {
                 return agregarProveedor();
             } else {
@@ -56,11 +54,7 @@ export const FormularioProveedor = ({tipo, proveedor, onReLoad, onHide}) => {
             }
         }
         
-        
         setValidated(true);
-
-        // setValidated(true);
-        // return agregarProveedor();
     };
 
     
@@ -93,21 +87,17 @@ export const FormularioProveedor = ({tipo, proveedor, onReLoad, onHide}) => {
     };
 
     const actualizarProveedor = async () => {
-        // const res = 
         await fetch('http://localhost:5000/proveedores', requestOptionsUpdate);
-        // const resproveedor = await res.json();
         onReLoad();
         onHide(false);
     };
 
-    
     const handleInputChange = (event) => {
         setDatosProveedores({
             ...datosProveedor,
             [event.target.name] : event.target.value
         })
     }
-
 
     const actualizarEstadoBoton = () => {
         if (tipo == 'agregar') {
